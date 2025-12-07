@@ -69,7 +69,17 @@ const Login = () => {
               </div>
               <button className="btn w-full btn-neutral mt-4">Login</button>
             </fieldset>
-            {/* Social login */}
+            <h1>
+              {" "}
+              Didn't have a account ?{" "}
+              <Link
+                to="/register"
+                className="text-blue-500 underline hover:text-blue-600"
+              >
+                Register
+              </Link>
+            </h1>
+             {/* Social login */}
             <h1 className="text-center">Or</h1>
             <button
             onClick={signinWithGoogle}
@@ -103,19 +113,11 @@ const Login = () => {
               </svg>
               Login with Google
             </button>
-            <h1>
-              {" "}
-              Didn't have a account ?{" "}
-              <Link
-                to="/register"
-                className="text-blue-500 underline hover:text-blue-600"
-              >
-                Register
-              </Link>
-            </h1>
           </div>
         </div>
+        
       </form>
+      
     </div>
   );
 };

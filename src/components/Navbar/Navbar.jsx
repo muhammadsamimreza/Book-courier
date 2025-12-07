@@ -1,7 +1,19 @@
 import React from "react";
 import { Link, Links, NavLink } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 const Navbar = () => {
+  const {user, logOut} = useAuth()
+ console.log(user)
+  const handleLogOut = ()=>{
+    logOut()
+    .then(()=>{
+      console.log("LogOut Successful")
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+  }
   const links = (
     <>
       <li>
@@ -9,6 +21,9 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink>Books</NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard">Dashboard</NavLink>
       </li>
     </>
   );
@@ -40,15 +55,24 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <a className="text-2xl font-bold"><spanc className="text-green-600">Book</spanc>Express</a>
+        <Link to="/" className="text-2xl font-bold cursor-pointer"><span className="text-green-600">Book</span>Express</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
+        {
+          user ? <a onClick={handleLogOut} className="btn">
+          LogOut
+        </a>
+        :
         <Link to="/login" className="btn">
           LogIn
         </Link>
+        }
+        <div>
+          <img className="w-8 h-8 ml-2 rounded-full" src={user?.photoURL} alt="" />
+        </div>
       </div>
     </div>
   );

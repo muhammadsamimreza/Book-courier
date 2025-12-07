@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import useAuth from "../../Hooks/useAuth";
+import axios from "axios";
 
 const Register = () => {
   const {
@@ -8,17 +9,41 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { registerUser, signInWithGoogle } = useAuth();
+  const { registerUser, signInWithGoogle, updateProfileInfo } = useAuth();
   const handleRegister = (data) => {
+    console.log(data.image[0]);
+    const profileImage = data.image[0];
     registerUser(data.email, data.password)
-    .then(result=>{
-      console.log(result.user)
-    })
-    .catch(err=>{
-        console.log(err)
+      .then((result) => {
+        console.log(result.user);
+        const formData = new FormData();
+        formData.append("image", profileImage);
+        const image_Api_Key = `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host_key
+        }`;
+        axios.post(image_Api_Key, formData)
+        .then(res=>{
+          console.log(res.data.data.display_url)
+
+          //update Profile
+
+          const updateProfile = {
+            displayName: data.name,
+            photoURL: res.data.data.display_url,
+          }
+          updateProfileInfo(updateProfile)
+          .then(()=>{
+            console.log("user profile udated")
+          }).catch(err=>{
+            console.log(err)
+          })
+        })
       })
-    };
- const signinWithGoogle = () => {
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const signinWithGoogle = () => {
     signInWithGoogle();
   };
   return (
@@ -49,7 +74,7 @@ const Register = () => {
                 {...register("image")}
                 className="w-full file-input file-input-success"
               />
-              {errors.file && (
+              {errors.image && (
                 <p className="text-red-500 text-sm">{errors.file.message}</p>
               )}
               {/* Email Field */}
@@ -88,11 +113,22 @@ const Register = () => {
                 Register
               </button>
             </fieldset>
+
+            <h1>
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 underline hover:text-blue-600"
+              >
+                Login
+              </Link>
+            </h1>
             {/* Social login */}
             <h1 className="text-center">Or</h1>
             <button
-            onClick={signinWithGoogle}
-             className="btn bg-white text-black border-[#e5e5e5]">
+              onClick={signinWithGoogle}
+              className="btn bg-white text-black border-[#e5e5e5]"
+            >
               <svg
                 aria-label="Google logo"
                 width="16"
@@ -122,15 +158,6 @@ const Register = () => {
               </svg>
               Login with Google
             </button>
-            <h1>
-              Already have an account?{" "}
-              <Link
-                to="/login"
-                className="text-blue-500 underline hover:text-blue-600"
-              >
-                Login
-              </Link>
-            </h1>
           </div>
         </div>
       </form>
