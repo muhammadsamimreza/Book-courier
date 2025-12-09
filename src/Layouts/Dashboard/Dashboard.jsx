@@ -1,4 +1,5 @@
 import React from "react";
+import { CgProfile } from "react-icons/cg";
 import { IoBookOutline} from "react-icons/io5";
 import { PiInvoiceLight } from "react-icons/pi";
 import { RiListUnordered } from "react-icons/ri";
@@ -104,6 +105,18 @@ const Dashboard = () => {
                   {/* invoice icon */}
                 <PiInvoiceLight />
                   <span className="is-drawer-close:hidden">My Invoice</span>
+                </Link>
+              </li>
+              {/* Profile List item */}
+              <li>
+                <Link to="/dashboard/myprofile"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Profile"
+                >
+                  {/* f
+                  profile icon */}
+                <CgProfile />
+                  <span className="is-drawer-close:hidden">My Profile</span>
                 </Link>
               </li>
 
