@@ -16,6 +16,7 @@ import MyInvoice from "../pages/Dashboard/MyInvoice/MyInvoice";
 import MyProfile from "../pages/Dashboard/MyProfile/MyProfile";
 import PrivateRoute from "./PrivateRoute";
 import AllOrders from "../pages/Dashboard/AllOrders/AllOrders";
+import AllBook from "../pages/Dashboard/AllBook/AllBook";
 
 export const router = createBrowserRouter([
   {
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
       {
         path: 'allorders',
         Component: AllOrders,
+      },
+      {
+        path: 'allBook',
+        Component: AllBook
       }
     ],
   },

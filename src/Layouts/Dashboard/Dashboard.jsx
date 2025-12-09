@@ -5,6 +5,7 @@ import { PiInvoiceLight } from "react-icons/pi";
 import { RiListUnordered } from "react-icons/ri";
 import { Link, Outlet } from "react-router";
 import useUserRole from "../../Hooks/useUserRole";
+import { GoBook } from "react-icons/go";
 
 const Dashboard = () => {
   const [dbUser, loading] = useUserRole();
@@ -92,6 +93,17 @@ const Dashboard = () => {
                       {/* Book icon */}
                       <IoBookOutline />
                       <span className="is-drawer-close:hidden">Add a Book</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/dashboard/allBook"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="All Book"
+                    >
+                      {/* Book icon */}
+                      <GoBook />
+                      <span className="is-drawer-close:hidden">All Book</span>
                     </Link>
                   </li>
                   <li>
