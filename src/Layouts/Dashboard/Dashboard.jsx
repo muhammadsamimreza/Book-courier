@@ -1,5 +1,6 @@
 import React from "react";
 import { IoBookOutline} from "react-icons/io5";
+import { PiInvoiceLight } from "react-icons/pi";
 import { RiListUnordered } from "react-icons/ri";
 import { Link, Outlet } from "react-router";
 
@@ -94,8 +95,19 @@ const Dashboard = () => {
                   <span className="is-drawer-close:hidden">My Order</span>
                 </Link>
               </li>
+              {/* Invoice List item */}
+              <li>
+                <Link to="/dashboard/myinvoice"
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Invoice"
+                >
+                  {/* invoice icon */}
+                <PiInvoiceLight />
+                  <span className="is-drawer-close:hidden">My Invoice</span>
+                </Link>
+              </li>
 
-              {/* List item */}
+              {/* settings List item */}
               <li>
                 <button
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
