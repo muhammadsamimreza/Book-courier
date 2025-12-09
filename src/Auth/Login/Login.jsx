@@ -1,21 +1,32 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../Hooks/useAuth";
-
+import Swal from "sweetalert2";
 
 const Login = () => {
   const { signinUser, signInWithGoogle } = useAuth();
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const handleLogin = (data) => {
     signinUser(data.email, data.password)
       .then((result) => {
         console.log(result.user);
+        navigate("/");
+        reset();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your Book has been added",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -23,6 +34,14 @@ const Login = () => {
   };
   const signinWithGoogle = () => {
     signInWithGoogle();
+    navigate("/");
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Your Book has been added",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -79,11 +98,12 @@ const Login = () => {
                 Register
               </Link>
             </h1>
-             {/* Social login */}
+            {/* Social login */}
             <h1 className="text-center">Or</h1>
             <button
-            onClick={signinWithGoogle}
-             className="btn bg-white text-black border-[#e5e5e5]">
+              onClick={signinWithGoogle}
+              className="btn bg-white text-black border-[#e5e5e5]"
+            >
               <svg
                 aria-label="Google logo"
                 width="16"
@@ -115,9 +135,7 @@ const Login = () => {
             </button>
           </div>
         </div>
-        
       </form>
-      
     </div>
   );
 };

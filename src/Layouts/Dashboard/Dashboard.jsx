@@ -1,11 +1,16 @@
 import React from "react";
 import { CgProfile } from "react-icons/cg";
-import { IoBookOutline} from "react-icons/io5";
+import { IoBookOutline } from "react-icons/io5";
 import { PiInvoiceLight } from "react-icons/pi";
 import { RiListUnordered } from "react-icons/ri";
 import { Link, Outlet } from "react-router";
+import useUserRole from "../../Hooks/useUserRole";
 
 const Dashboard = () => {
+  const [dbUser, loading] = useUserRole();
+  const role = dbUser?.role;
+  if (loading)
+    return <span className="loading loading-spinner text-accent"></span>;
   return (
     <div>
       <div className="drawer lg:drawer-open">
@@ -34,7 +39,7 @@ const Dashboard = () => {
                 <path d="M14 10l2 2l-2 2"></path>
               </svg>
             </label>
-            <div className="px-4">User Dashboard</div>
+            <div className="px-4">{dbUser?.role} Dashboard</div>
           </nav>
           {/* Page content here */}
           <div className="p-4">
@@ -53,7 +58,8 @@ const Dashboard = () => {
             <ul className="menu w-full grow">
               {/* List item */}
               <li>
-                <Link to="/"
+                <Link
+                  to="/"
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Homepage"
                 >
@@ -74,51 +80,75 @@ const Dashboard = () => {
                   <span className="is-drawer-close:hidden">Homepage</span>
                 </Link>
               </li>
-              {/* Book List item */}
-              <li>
-                <Link to="/dashboard/addbook"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Add a Book"
-                >
-                  {/* Book icon */}
-                 <IoBookOutline />
-                  <span className="is-drawer-close:hidden">Add a Book</span>
-                </Link>
-              </li>
-              {/* Order List item */}
-              <li>
-                <Link to="/dashboard/myorder"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Order"
-                >
-                  {/* Book icon */}
-                 <RiListUnordered/>
-                  <span className="is-drawer-close:hidden">My Order</span>
-                </Link>
-              </li>
-              {/* Invoice List item */}
-              <li>
-                <Link to="/dashboard/myinvoice"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Invoice"
-                >
-                  {/* invoice icon */}
-                <PiInvoiceLight />
-                  <span className="is-drawer-close:hidden">My Invoice</span>
-                </Link>
-              </li>
-              {/* Profile List item */}
-              <li>
-                <Link to="/dashboard/myprofile"
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Profile"
-                >
-                  {/* f
-                  profile icon */}
-                <CgProfile />
-                  <span className="is-drawer-close:hidden">My Profile</span>
-                </Link>
-              </li>
+              {/* Added item for role:librarian*/}
+              {role === "librarian" && (
+                <>
+                  <li>
+                    <Link
+                      to="/dashboard/addbook"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Add a Book"
+                    >
+                      {/* Book icon */}
+                      <IoBookOutline />
+                      <span className="is-drawer-close:hidden">Add a Book</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/dashboard/allorders"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="All Orders"
+                    >
+                      {/* Book icon */}
+                      <RiListUnordered />
+                      <span className="is-drawer-close:hidden">All Orders</span>
+                    </Link>
+                  </li>
+                </>
+              )}
+              {/*Normal user role */}
+
+              {role === "user" && (
+                <>
+                  {/* Order List item */}
+                  <li>
+                    <Link
+                      to="/dashboard/myorder"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Order"
+                    >
+                      {/* Book icon */}
+                      <RiListUnordered />
+                      <span className="is-drawer-close:hidden">My Order</span>
+                    </Link>
+                  </li>
+                  {/* Invoice List item */}
+                  <li>
+                    <Link
+                      to="/dashboard/myinvoice"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Invoice"
+                    >
+                      {/* invoice icon */}
+                      <PiInvoiceLight />
+                      <span className="is-drawer-close:hidden">My Invoice</span>
+                    </Link>
+                  </li>
+                  {/* Profile List item */}
+                  <li>
+                    <Link
+                      to="/dashboard/myprofile"
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Profile"
+                    >
+                      {/* profile icon */}
+                      <CgProfile />
+                      <span className="is-drawer-close:hidden">My Profile</span>
+                    </Link>
+                  </li>
+                </>
+              )}
 
               {/* settings List item */}
               <li>

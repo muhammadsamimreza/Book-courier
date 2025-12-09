@@ -3,16 +3,16 @@ import { Link, NavLink } from "react-router";
 import useAuth from "../../Hooks/useAuth";
 
 const Navbar = () => {
-  const {user, logOut} = useAuth()
-  const handleLogOut = ()=>{
+  const { user, logOut } = useAuth();
+  const handleLogOut = () => {
     logOut()
-    .then(()=>{
-      console.log("LogOut Successful")
-    })
-    .catch(err=>{
-      console.log(err)
-    })
-  }
+      .then(() => {
+        console.log("LogOut Successful");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const links = (
     <>
       <li>
@@ -21,9 +21,11 @@ const Navbar = () => {
       <li>
         <NavLink to="/allbooks">Books</NavLink>
       </li>
-      <li>
-        <NavLink to="/dashboard">Dashboard</NavLink>
-      </li>
+      {user && (
+        <li>
+          <NavLink to="/dashboard">Dashboard</NavLink>
+        </li>
+      )}
     </>
   );
   return (
@@ -54,24 +56,32 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <Link to="/" className="text-2xl font-bold cursor-pointer"><span className="text-green-600">Book</span>Express</Link>
+        <Link to="/" className="text-2xl font-bold cursor-pointer">
+          <span className="text-green-600">Book</span>Express
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
-        {
-          user ? <a onClick={handleLogOut} className="btn">
-          LogOut
-        </a>
-        :
-        <Link to="/login" className="btn">
-          LogIn
-        </Link>
-        }
-        <div>
-          <img className="w-8 h-8 ml-2 rounded-full" src={user?.photoURL} alt="" />
-        </div>
+        {user ? (
+          <a onClick={handleLogOut} className="btn">
+            LogOut
+          </a>
+        ) : (
+          <Link to="/login" className="btn">
+            LogIn
+          </Link>
+        )}
+        {user && (
+          <div>
+            <img
+              className="w-8 h-8 ml-2 rounded-full"
+              src={user?.photoURL}
+              alt=""
+            />
+          </div>
+        )}
       </div>
     </div>
   );

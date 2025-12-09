@@ -2,9 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import axios from "axios";
+import useAuth from "../../Hooks/useAuth";
+import Swal from "sweetalert2";
 
 const AddedBook = () => {
-  const { register, handleSubmit } = useForm();
+  const { reset, register, handleSubmit } = useForm();
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const AddedBookToServer = (data) => {
     console.log("Book Data:", data);
@@ -20,16 +23,24 @@ const AddedBook = () => {
       const bookInfo = {
         title: data.title,
         author: data.author,
+        addBy: user.email,
         price: data.price,
         status: data.status,
         photoURL: res.data.data.display_url,
         createdAt: new Date(),
       };
       // send data to database---
-      axiosSecure.post("/allbooks", bookInfo)
-      .then(res=>{
-        console.log(res.data)
-      })
+      axiosSecure.post("/allbooks", bookInfo).then((res) => {
+        console.log(res.data);
+        reset();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your Book has been added",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
     });
   };
 

@@ -1,48 +1,110 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../Hooks/useAuth";
 import axios from "axios";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const { registerUser, signInWithGoogle, updateProfileInfo } = useAuth();
-  const handleRegister = (data) => {
-    console.log(data.image[0]);
-    const profileImage = data.image[0];
-    registerUser(data.email, data.password)
-      .then((result) => {
-        console.log(result.user);
-        const formData = new FormData();
-        formData.append("image", profileImage);
-        const image_Api_Key = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_image_host_key
-        }`;
-        axios.post(image_Api_Key, formData)
-        .then(res=>{
-          console.log(res.data.data.display_url)
-
-          //update Profile
-
-          const updateProfile = {
-            displayName: data.name,
-            photoURL: res.data.data.display_url,
-          }
-          updateProfileInfo(updateProfile)
-          .then(()=>{
-            console.log("user profile udated")
-          }).catch(err=>{
-            console.log(err)
-          })
-        })
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate()
+  const saveUser = (user) => {
+    const userInfo = {
+      name: user.displayName,
+      email: user.email,
+      role: "user",
+    };
+    axiosSecure.post("/users", userInfo).then((res) => {
+      console.log(res.data);
+    });
   };
+  // const handleRegister = (data) => {
+
+  //   const profileImage = data.image[0];
+  //   registerUser(data.email, data.password)
+  //     .then((result) => {
+  //       console.log(result.user);
+  //       saveUser(user)
+  //       const formData = new FormData();
+  //       formData.append("image", profileImage);
+  //       const image_Api_Key = `https://api.imgbb.com/1/upload?key=${
+  //         import.meta.env.VITE_image_host_key
+  //       }`;
+  //       axios.post(image_Api_Key, formData).then((res) => {
+  //         console.log(res.data.data.display_url);
+
+  //         //update Profile
+
+  //         const updateProfile = {
+  //           displayName: data.name,
+  //           photoURL: res.data.data.display_url,
+  //         };
+  //         updateProfileInfo(updateProfile)
+  //           .then(() => {
+  //             console.log("user profile udated");
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //           });
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+  const handleRegister = async (data) => {
+    try {
+      // Create user account
+      const result = await registerUser(data.email, data.password);
+      const createdUser = result.user;
+
+      // Upload image to imgbb
+      const profileImage = data.image[0];
+      const formData = new FormData();
+      formData.append("image", profileImage);
+
+      const image_Api_Key = `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_image_host_key
+      }`;
+      const imgRes = await axios.post(image_Api_Key, formData);
+      const imageUrl = imgRes.data.data.display_url;
+
+      // Update Firebase Profile
+      await updateProfileInfo({
+        displayName: data.name,
+        photoURL: imageUrl,
+      });
+
+      console.log("Firebase profile updated!");
+
+      // Save to Database using the UPDATED user info
+      await saveUser({
+        displayName: data.name,
+        email: createdUser.email,
+      });
+
+      console.log("User saved to DB!");
+      navigate('/')
+       reset()
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your registration has been completed",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+    } catch (error) {
+      console.error("Registration error:", error);
+    }
+  };
+
   const signinWithGoogle = () => {
     signInWithGoogle();
   };
