@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router";
-import Home from "../Layouts/AuthLayout/AuthLayout";
 import HomeLayout from "../Layouts/HomeLayout/HomeLayout";
 import Login from "../Auth/Login/Login";
 import AuthLayout from "../Layouts/AuthLayout/AuthLayout";
@@ -21,6 +20,7 @@ import EditBook from "../pages/Dashboard/EditBookPage/EditBookPage";
 import AdminAllBooks from "../pages/Dashboard/AdminAllBooks/AdminAllBooks";
 import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import { Banner } from "../components/Banner/Banner";
+import Home from "../Layouts/HomeLayout/Home/Home";
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Banner
+        Component: Home
       },
       {
         path: "/allbooks",
