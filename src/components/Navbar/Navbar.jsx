@@ -59,6 +59,7 @@ const Navbar = () => {
         <Link to="/" className="text-2xl font-bold cursor-pointer">
           <span className="text-green-600">Book</span>Express
         </Link>
+        <h1 className="ml-5">{user?.email}</h1>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
@@ -75,6 +76,7 @@ const Navbar = () => {
         )}
         {user && (
           <div>
+            
             <img
               className="w-8 h-8 ml-2 rounded-full"
               src={user?.photoURL}
